@@ -2,7 +2,7 @@ import express from 'express';
 import type {Request, Response} from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.ts';
-import Users from './models/User.ts';
+
 
 // Load environment variables
 dotenv.config();

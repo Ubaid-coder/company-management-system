@@ -16,7 +16,7 @@ interface user {
 
 export const register = async (req: Request, res: Response) => {
     try {
-        const { name, email }: { name: string, email: string } = req.body;
+        const { name, email, role }: { name: string, email: string, role: string } = req.body;
         let { password }: { password: string | number } = req.body;
         if (typeof password == 'number') {
             (password = password?.toString())
@@ -28,7 +28,13 @@ export const register = async (req: Request, res: Response) => {
             });
         }
 
-        password = password.toString();
+        if(password.length < 8){
+            return res.status(400).json({
+                error: 'Password must be at least 8 characters long'
+            })
+        }
+
+    
         const exists: user | null = await Users.findOne({ email });
 
         if (exists) {
@@ -41,7 +47,8 @@ export const register = async (req: Request, res: Response) => {
         const User: user = await Users.create({
             name,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            role: role || 'employee'
 
         });
 
@@ -91,9 +98,7 @@ export const login = async (req: Request, res: Response) => {
             })
         }
 
-        const token: string = await generateToken(User.id, User.name, User.email, User.role);
-
-        console.log(token);
+        const token: string = await generateToken(User.id, User.role);
 
         return res.status(200).json({
             message: 'Login successful',

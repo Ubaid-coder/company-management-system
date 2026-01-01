@@ -21,6 +21,14 @@ const userSchema = new mongoose.Schema(
             type: String,
             enum: ['admin', 'employee'],
             default: 'employee'
+        },
+        tokenVersion:{
+            type: Number,
+            default: 0
+        },
+        isBlocked: {
+            type: Boolean,
+            default: false
         }
     },
     { timestamps: true }

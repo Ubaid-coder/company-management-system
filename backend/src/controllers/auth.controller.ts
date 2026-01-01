@@ -90,6 +90,11 @@ export const login = async (req: Request, res: Response) => {
                 error: 'Invalid email or password'
             });
         }
+        if(User.isBlocked){
+            return res.status(400).json({
+                error:'You have been blocked'
+            })
+        }
 
         const isPasswordValid: boolean = await comparePassword(password, User.password);
         if (!isPasswordValid) {
@@ -98,7 +103,7 @@ export const login = async (req: Request, res: Response) => {
             })
         }
 
-        const token: string = await generateToken(User.id, User.role);
+        const token: string = await generateToken(User.id, User.role, User.tokenVersion);
 
         return res.status(200).json({
             message: 'Login successful',

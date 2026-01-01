@@ -1,10 +1,13 @@
 import { Router } from "express";
-import { authenticated } from "../middleware/auth.middleware.ts";
-import { authorizeRole } from "../middleware/role.middleware.ts";
-import { adminPanel } from "../controllers/admin.controller.ts";
+import { adminPanel, blockUser, unblockUser, updateRole } from "../controllers/admin.controller.ts";
+import { register } from "../controllers/auth.controller.ts";
 
 const router = Router();
 
-router.get('/dashboard', authenticated, authorizeRole, adminPanel);
+router.get('/dashboard', adminPanel);
+router.post('/adduser', register)
+router.patch('/changerole', updateRole); 
+router.patch('/block/:id', blockUser);
+router.patch('/unblock/:id', unblockUser);
 
 export default router;

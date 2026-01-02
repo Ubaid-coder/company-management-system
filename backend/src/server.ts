@@ -7,6 +7,7 @@ import adminRoutes from './routes/admin.routes.ts';
 import profileRoutes from './routes/user.routes.ts';
 import { authenticated, islogged, tokenVersion } from './middleware/auth.middleware.ts';
 import { authorizeRole } from './middleware/role.middleware.ts';
+import cors from 'cors';
 
 // Load environment variables
 dotenv.config();
@@ -18,6 +19,7 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(cors());
 
 // Routes
 app.get('/', (req: Request, res: Response) => {

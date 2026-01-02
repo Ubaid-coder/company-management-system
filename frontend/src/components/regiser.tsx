@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
+import { useState } from 'react';
+import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { apiFetch } from '../lib/api';
-import { isAuthenticated } from '../auth/isAuthenticated';
 
-export default function LoginPage() {
+export default function RegisterPage() {
     const [showPassword, setShowPassword] = useState(false);
+    const [name, setName] = useState('Muhamamd Ubaid');
     const [email, setEmail] = useState('ubaid@gmail.com');
     const [password, setPassword] = useState('ubaid12345678');
     const navigate = useNavigate();
@@ -13,9 +13,9 @@ export default function LoginPage() {
     const handleSubmit = async (e?: React.FormEvent) => {
         e?.preventDefault();
         try {
-            const res: { token: string, message: string } = await apiFetch('/auth/login', {
+            const res: { token: string, message: string } = await apiFetch('/auth/register', {
                 method: "POST",
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ name, email, password })
             });
             localStorage.setItem('token', res.token);
             if (res) {
@@ -32,10 +32,6 @@ export default function LoginPage() {
         }
     };
 
-    useEffect(() => {
-        isAuthenticated()
-    }, [])
-
     return (
         <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
@@ -46,12 +42,31 @@ export default function LoginPage() {
                         <div className="inline-flex items-center justify-center w-16 h-16 bg-linear-to-br from-blue-500 to-purple-600 rounded-full mb-2">
                             <Lock className="w-8 h-8 text-white" />
                         </div>
-                        <h1 className="text-3xl font-bold text-gray-900">Welcome Back</h1>
-                        <p className="text-gray-500">Sign in to your account to continue</p>
+                        <h1 className="text-3xl font-bold text-gray-900">Create Account</h1>
+                        <p className="text-gray-500">SignUp to create your account</p>
                     </div>
 
                     {/* Form Fields */}
                     <form onSubmit={handleSubmit} className="space-y-4">
+                        {/* Name Input */}
+                        <div className="space-y-2">
+                            <label htmlFor="name" className="text-sm font-medium text-gray-700 block">
+                                Name
+                            </label>
+                            <div className="relative">
+                                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                <input
+                                    id="name"
+                                    type="text"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    onKeyDown={handleKeyPress}
+                                    placeholder="Enter your name"
+                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                                    required
+                                />
+                            </div>
+                        </div>
                         {/* Email Input */}
                         <div className="space-y-2">
                             <label htmlFor="email" className="text-sm font-medium text-gray-700 block">
@@ -83,6 +98,7 @@ export default function LoginPage() {
                                     id="password"
                                     type={showPassword ? 'text' : 'password'}
                                     value={password}
+                                    minLength={8}
                                     onChange={(e) => setPassword(e.target.value)}
                                     onKeyDown={handleKeyPress}
                                     placeholder="••••••••"
@@ -126,20 +142,20 @@ export default function LoginPage() {
                             type='submit'
                             className=" cursor-pointer w-full bg-linear-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transform hover:scale-[1.02] transition duration-200 shadow-lg"
                         >
-                            Sign In
+                            Sign Up
                         </button>
                     </form>
 
 
-                    {/* Sign Up Link */}
+                    {/* Sign In Link */}
                     <p className="text-center text-sm text-gray-600">
-                        Don't have an account?{' '}
-                        <Link to={'/register'}>
+                       Already have an account?{' '}
+                        <Link to={'/login'}>
                             <button
                                 type="button"
                                 className="cursor-pointer text-blue-600 hover:text-blue-700 font-semibold transition"
                             >
-                                Sign up
+                                Sign In
                             </button>
                         </Link>
                     </p>

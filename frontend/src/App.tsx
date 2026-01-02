@@ -1,15 +1,13 @@
-import { Route, Routes } from "react-router-dom"
-import LoginPage from "./components/login"
+import { useEffect } from "react"
+import { isAuthenticated } from "./auth/isAuthenticated"
 
 const App = () => {
-
+useEffect(() => {
+  isAuthenticated();
+}, [])
 
   return (
     <>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        
-      </Routes>
     </>
   )
 }

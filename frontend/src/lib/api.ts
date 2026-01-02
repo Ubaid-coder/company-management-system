@@ -4,23 +4,23 @@ export async function apiFetch<T>(url: string, options: RequestInit = {}): Promi
     const token = localStorage.getItem('token');
     const res = await fetch(`${BASE_URL}${url}`, {
         ...options,
-        headers:{
+        headers: {
             'Content-Type': 'application/json',
-            ...( {Authorization: `Bearer ${token}`}),
+            ...(token && { Authorization: `Bearer ${token}` }),
             ...options.headers
         }
     });
 
-    if(res.status == 401){
+    if (res.status == 401) {
         localStorage.removeItem('token');
         window.location.href = '/login';
-    }else if(res.status == 403){
+    } else if (res.status == 403) {
         window.location.href = '/'
     }
 
-    if(!res.ok){
+    if (!res.ok) {
         const error = await res.json();
-        throw new Error(error.message || "Request failed")
+        throw new Error(error.error)
     }
     return res.json();
 }

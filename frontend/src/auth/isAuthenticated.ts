@@ -1,6 +1,5 @@
-import { apiFetch } from "../lib/api"
 
-export const isAuthenticated = async () => {
-    const res = await apiFetch('/user/profile')
-    console.log(res)
+export const isAuthenticated =  ():boolean => {
+    const token = localStorage.getItem("token");
+    return Boolean(token);
 }

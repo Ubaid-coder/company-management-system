@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { apiFetch } from '../lib/api';
-import { isAuthenticated } from '../auth/isAuthenticated';
 
 export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
@@ -18,11 +17,12 @@ export default function LoginPage() {
                 body: JSON.stringify({ email, password })
             });
             localStorage.setItem('token', res.token);
+            alert(res.message);
             if (res) {
                 navigate('/')
             }
         } catch (error) {
-            console.error(error)
+            alert(error)
         }
     };
 
@@ -32,9 +32,6 @@ export default function LoginPage() {
         }
     };
 
-    useEffect(() => {
-        isAuthenticated()
-    }, [])
 
     return (
         <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">

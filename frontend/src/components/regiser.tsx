@@ -22,7 +22,7 @@ export default function RegisterPage() {
                 navigate('/')
             }
         } catch (error) {
-            console.error(error)
+            alert(error)
         }
     };
 
@@ -31,6 +31,7 @@ export default function RegisterPage() {
             handleSubmit();
         }
     };
+
 
     return (
         <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">

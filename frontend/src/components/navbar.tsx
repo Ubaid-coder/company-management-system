@@ -1,10 +1,33 @@
-import { useState } from 'react';
-import { Menu, X, ChevronDown, Search, Bell, User } from 'lucide-react';
+import { use, useEffect, useState } from 'react';
+import { Menu, X, ChevronDown, Search } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isProductsOpen, setIsProductsOpen] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+    const [islogin, setislogin] = useState(false);
+  
+
+    const checkLoginStatus = () => {
+        const token = localStorage.getItem('token');
+        setislogin(!!token);
+
+    };
+
+    useEffect(() => {
+        checkLoginStatus();
+        window.addEventListener('authChange', checkLoginStatus);
+    },[])
+
+
+    const handleloggedout = () => {
+        localStorage.removeItem('token');
+          window.dispatchEvent(new Event('authChange'));
+        setislogin(false);
+    }
+
+
 
     return (
         <nav className="bg-white shadow-md sticky top-0 z-50">
@@ -73,15 +96,29 @@ export default function Navbar() {
                             <Search className="w-5 h-5" />
                         </button>
 
-                        {/* Sign In Button */}
-                        <button className="px-4 py-2 text-gray-700 hover:text-blue-600 font-semibold transition">
-                            Sign In
-                        </button>
+                        {
+                            !islogin ? (
+                                <>
+                                    <Link to={'/login'}>
+                                        <button className="px-4 py-2 text-gray-700 hover:text-blue-600 font-semibold transition">
+                                            Sign In
+                                        </button>
+                                    </Link>
 
-                        {/* Sign Up Button */}
-                        <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition shadow-md">
-                            Sign Up
-                        </button>
+
+                                    <Link to={'/register'}>
+                                        <button className="px-6 py-2 bg-linear-to-r from-blue-500 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition shadow-md">
+                                            Sign Up
+                                        </button>
+                                    </Link>
+
+                                </>
+                            ) : <Link to={'/login'} onClick={handleloggedout}>
+                                <button className="cursor-pointer px-6 py-2 bg-linear-to-r bg-red-600 text-white rounded-lg font-semibold hover:bg-red-500  transition shadow-md">
+                                    Logout
+                                </button>
+                            </Link>
+                        }
                     </div>
 
                     {/* Mobile Menu Button */}

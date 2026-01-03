@@ -8,14 +8,16 @@ import RegisterPage from './components/regiser.tsx'
 import { Loggeded } from './auth/loggeded.tsx'
 import { RequireAuth } from './auth/RequireAuth.tsx'
 import Navbar from './components/navbar.tsx'
+import  User  from './components/user.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
-  <Navbar />
+    <Navbar />
     <Routes >
 
       <Route element={<RequireAuth />}>
         <Route path='/' element={<App />} />
+        <Route path='/user/:id' element={<User />} />
       </Route>
 
       <Route element={<Loggeded />}>

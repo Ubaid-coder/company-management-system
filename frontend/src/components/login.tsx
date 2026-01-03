@@ -17,6 +17,8 @@ export default function LoginPage() {
                 body: JSON.stringify({ email, password })
             });
             localStorage.setItem('token', res.token);
+            window.dispatchEvent(new Event('authChange'));
+        
             alert(res.message);
             if (res) {
                 navigate('/')

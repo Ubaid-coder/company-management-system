@@ -1,13 +1,12 @@
 import { Router } from "express";
-import { adminPanel, blockUser, unblockUser, updateRole } from "../controllers/admin.controller.ts";
+import { adminPanel, blockUser, unblockUser, updateUser, findUser } from "../controllers/admin.controller.ts";
 import { register } from "../controllers/auth.controller.ts";
 
 const router = Router();
 
 router.get('/dashboard', adminPanel);
-router.post('/adduser', register)
-router.patch('/changerole', updateRole); 
-router.patch('/block/:id', blockUser);
-router.patch('/unblock/:id', unblockUser);
+router.get('/user/:id', findUser);
+router.post('/adduser', register);
+router.put('/updateuser/:id', updateUser); 
 
 export default router;

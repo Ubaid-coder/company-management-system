@@ -16,27 +16,51 @@ export const adminPanel = async (req: Request, res: Response) => {
     }
 }
 
-export const updateRole = async (req: Request, res: Response) => {
+export const findUser = async (req: Request, res: Response) => {
     try {
-        const { role, userId } = req.body;
-        if (!userId || !role) {
-            return res.status(400).json({
-                error: 'All fields are required'
-            })
-        };
+        const { id } = req.params;
+        const user = await Users.findById(id);
+        res.status(200).json({
+            message: 'user',
+            user: user
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const updateUser = async (req: AuthRequest, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { name, email, role, isBlocked } = req.body;
+
         if (!ROLES.includes(role)) {
             return res.status(400).json({
                 erro: 'Invalid role value'
             })
         };
+        const adminUser = await Users.find({ role: 'admin' });
 
-        const user = await Users.findByIdAndUpdate(userId, {
-            role,
-            $inc: { tokenVersion: 1 }
+        const finduser = await Users.findById(id);
+        if (isBlocked == true && finduser?.id == req.user?.userId) {
+            return res.status(400).json({
+                error: 'Cannot block your self'
+            })
+        };
+        
+        if (role == 'employee' && adminUser.length <= 1) {
+            return res.status(400).json({
+                error: 'Atleast one admin required'
+            })
         }
 
-
-        ).select('-password');
+        const user = await finduser?.updateOne({
+            name,
+            email,
+            role,
+            isBlocked,
+            $inc: { tokenVersion: 1 }
+        }).select('-password');
 
         if (!user) {
             return res.status(404).json({
@@ -55,13 +79,13 @@ export const updateRole = async (req: Request, res: Response) => {
     }
 }
 
-export const  blockUser = async (req: AuthRequest, res: Response) => {
+export const blockUser = async (req: AuthRequest, res: Response) => {
     try {
         const { id } = req.params;
         const finduser = await Users.findById(id);
-        if(finduser?.id == req.user?.userId){
+        if (finduser?.id == req.user?.userId) {
             return res.status(400).json({
-                error:'Cannot block your self'
+                error: 'Cannot block your self'
             })
         }
         const user = await finduser?.updateOne({
@@ -70,15 +94,15 @@ export const  blockUser = async (req: AuthRequest, res: Response) => {
 
         }, { new: true }).select('-password');
 
-        if(!user){
+        if (!user) {
             return res.status(404).json({
-                error:'User Not Found'
+                error: 'User Not Found'
             })
         }
 
         res.json({
             message: "User is now blocked",
-           
+
         });
 
     } catch (error) {
@@ -92,9 +116,9 @@ export const unblockUser = async (req: AuthRequest, res: Response) => {
     try {
         const { id } = req.params;
         const finduser = await Users.findById(id);
-        if(finduser?.id == req.user?.userId){
+        if (finduser?.id == req.user?.userId) {
             return res.status(400).json({
-                error:'Cannot unblock yourself'
+                error: 'Cannot unblock yourself'
             })
         }
 
@@ -104,15 +128,15 @@ export const unblockUser = async (req: AuthRequest, res: Response) => {
 
         }, { new: true }).select('-password');
 
-        if(!user){
+        if (!user) {
             return res.status(404).json({
-                error:'User Not Found'
+                error: 'User Not Found'
             })
         }
 
         res.json({
             message: "User is now unblocked",
-           
+
         });
 
     } catch (error) {

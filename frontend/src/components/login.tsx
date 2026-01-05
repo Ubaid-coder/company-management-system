@@ -12,13 +12,14 @@ export default function LoginPage() {
     const handleSubmit = async (e?: React.FormEvent) => {
         e?.preventDefault();
         try {
-            const res: { token: string, message: string } = await apiFetch('/auth/login', {
+            const res: { token: string, message: string, role: string } = await apiFetch('/auth/login', {
                 method: "POST",
                 body: JSON.stringify({ email, password })
             });
             localStorage.setItem('token', res.token);
+            localStorage.setItem('role', res.role);
             window.dispatchEvent(new Event('authChange'));
-        
+
             alert(res.message);
             if (res) {
                 navigate('/')

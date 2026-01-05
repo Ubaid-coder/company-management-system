@@ -9,6 +9,7 @@ import { Loggeded } from './auth/loggeded.tsx'
 import { RequireAuth } from './auth/RequireAuth.tsx'
 import Navbar from './components/navbar.tsx'
 import  User  from './components/user.tsx'
+import UserPanel from './components/UserPanel.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
@@ -17,6 +18,7 @@ createRoot(document.getElementById('root')!).render(
 
       <Route element={<RequireAuth />}>
         <Route path='/' element={<App />} />
+        <Route path='/user' element={<UserPanel />} />
         <Route path='/user/:id' element={<User />} />
       </Route>
 

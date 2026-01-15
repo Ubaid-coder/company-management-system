@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { adminPanel, blockUser, unblockUser, updateUser, findUser } from "../controllers/admin.controller.ts";
+import { adminPanel, updateUser, findUser } from "../controllers/admin.controller.ts";
 import { register } from "../controllers/auth.controller.ts";
 
 const router = Router();
